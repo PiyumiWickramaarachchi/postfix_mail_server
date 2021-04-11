@@ -1,0 +1,66 @@
+https://docs.aws.amazon.com/ses/latest/DeveloperGuide/postfix.html
+https://elprespufferfish.net/blog/aws,mail/2015/09/03/mail-server-ec2.html
+http://largepixels.net/post/910
+
+=====install=====
+yum install postfix
+yum install cyrus-sasl-plain
+
+
+systemctl start postfix
+systemctl enable postfix
+systemctl status postfix
+
+Note:- if other mail services running like sendmail please stop and disable
+
+
+
+[root@ip-172-31-86-4 ~]# cat /etc/postfix/main.cf
+relayhost = [smtp.gmail.com]:587
+smtp_use_tls = yes
+smtp_sasl_auth_enable = yes
+smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
+#smtp_tls_CAfile = /etc/ssl/certs/ca-bundle.crt
+smtp_sasl_security_options = noanonymous
+smtp_sasl_tls_security_options = noanonymous
+
+[root@ip-172-31-86-4 ~]# cat /etc/postfix/sasl_passwd
+[smtp.gmail.com]:587 piyumiwickramaarachchi1@gmail.com:1995122pp@@PP
+
+[root@ip-172-31-86-4 ~]# postmap /etc/postfix/sasl_passwd
+
+[root@ip-172-31-86-4 ~]# chmod 777 /etc/postfix/sasl_passwd
+
+
+
+systemctl restart postfix
+systemctl status postfix
+
+
+===== Turn on "Less Secure app access" ====
+
+Go to "google.com"
+Click "Manage your account"
+Select "security" on left side
+Turn on "Less Secure app access"
+
+https://support.google.com/accounts/answer/6010255
+https://www.google.com/accounts/DisplayUnlockCaptcha
+
+
+
+====== Test using 'mail' client=====
+yum install mailx-12.5-29.el8.x86_64
+
+
+echo "This is the body of the email" | mail -s "This is the subject line" piyumiwickramaarachchi1@gmail.com
+ 
+
+
+
+===verify====
+#mailq
+#tar -f /var/log/maillog
+
+
+ec2-54-147-152-93.compute-1.amazonaws.com
